@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 })
 app.use(express.json());
 app.use(cors({
-    origin : ['https://42.192.226.123:8000','https://localhost:8000']
+    origin : ['https://42.192.226.123:8000','https://localhost:8000', 'https://10.0.4.15:8000']
 }));
 app.use(express.static("../will/dist"))
 app.post("/login", (req, res, next) => {
