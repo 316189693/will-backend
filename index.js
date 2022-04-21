@@ -8,7 +8,7 @@ let options = {
 };
 
 const app = express();
-const port = 3000
+const port = 7000
 
 app.get("/", (req, res) => {
     res.send('hello world')
@@ -27,4 +27,4 @@ app.post("/login", (req, res, next) => {
     return res.send({status: -1});
 })
 let server = https.createServer(options, app);
-server.listen(3000);
+server.listen(port);
