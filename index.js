@@ -46,7 +46,8 @@ function beforeStartServer() {
 }
 
 function startServer() {
-    logger.error(process.env);
+    logger.error(process.env.NODE_ENV);
+    logger.error(JSON.stringify(process.env));
     app.use(express.json());
     app.use(cors({
         origin :cfg.allow_cros_origin_array
