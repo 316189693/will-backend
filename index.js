@@ -13,7 +13,7 @@ let CheckSecure = require("./controller/middle/CheckSecure")
 
 let env = process.env.NODE_ENV !== 'production' ? 'dev':'prod';
 let cfg = require("../will-config/will-backend/"+env+"/config.json");
-config.json(env);
+console.log(env);
 let options = {
     key: fs.readFileSync(cfg.privkey_file),
     cert: fs.readFileSync(cfg.cacert_file)
