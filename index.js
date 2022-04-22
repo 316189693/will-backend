@@ -2,22 +2,24 @@ const express = require('express')
 const cors = require('cors')
 let fs = require('fs');
 let https = require("https");
+let env = process.env.NODE_ENV !== 'production' ? 'dev':'prod';
+console.log(env);
+let cfg = require("../will-config/will-backend/"+env+"/config.json");
 let options = {
-    key: fs.readFileSync("../enc/privkey.pem"),
-    cert: fs.readFileSync("../enc/cacert.pem")
+    key: fs.readFileSync(cfg.privkey_file),
+    cert: fs.readFileSync(cfg.cacert_file)
 };
 
 const app = express();
-const port = 7000
+const port = cfg.port;
 
 app.get("/", (req, res) => {
     res.send('hello world')
 })
 app.use(express.json());
 app.use(cors({
-    origin : ['https://42.192.226.123:8000','https://localhost:8000','http://localhost:8000', 'https://10.0.4.15:8000']
+    origin :cfg.allow_cros_origin_array
 }));
-app.use(express.static("../will/dist"))
 app.post("/login", (req, res, next) => {
     let account = req.body.account;
     let password = req.body.password;
