@@ -13,7 +13,6 @@ let CheckSecure = require("./controller/middle/CheckSecure")
 
 let env = process.env.NODE_ENV !== 'production' ? 'dev':'prod';
 let cfg = require("../will-config/will-backend/"+env+"/config.json");
-console.log(env);
 let options = {
     key: fs.readFileSync(cfg.privkey_file),
     cert: fs.readFileSync(cfg.cacert_file)
@@ -46,8 +45,6 @@ function beforeStartServer() {
 }
 
 function startServer() {
-    logger.error(process.env.NODE_ENV);
-    logger.error(JSON.stringify(process.env));
     app.use(express.json());
     app.use(cors({
         origin :cfg.allow_cros_origin_array
@@ -77,7 +74,7 @@ function startServer() {
    // app.use(auth_service());
    // app.use("/tms/cron", Controllers());
     app.use(handleError());
-    let server = require("https").createServer(options, app);
+    let server = https.createServer(options, app);
     server.listen(port);
 }
 let initReq = function (req) {
