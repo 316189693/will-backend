@@ -1,0 +1,24 @@
+let crypto = require('crypto');
+
+let strs = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+    "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+    "1","2","3","4","5","6","7","8","9"
+];
+
+module.exports = {
+  generateStr: function(length){
+      let str = "";
+      let strs_length = strs.length;
+      for(let i=0; i < length; i++) {
+          let num = parseInt(Math.random()*100) % strs_length;
+          str += strs[num];
+      }
+      return str;
+  },
+  md5: function(txt) {
+      let _md5 = crypto.createHash('md5');
+      return _md5.update(txt).digest('hex');
+  }
+};

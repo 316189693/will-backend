@@ -17,8 +17,27 @@
   },
   "homepage": "https://github.com/316189693/will-backend#readme",
   "dependencies": {
+    "@mysql/xdevapi": "^8.0.28",
     "axios": "^0.26.1",
+    "body-parser": "latest",
     "cors": "^2.8.5",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "js-md5": "latest",
+    "js-string-escape": "^1.0.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.31",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "node-uuid": "^1.4.8",
+    "nodemailer": "^6.4.8",
+    "query-string": "latest",
+    "request": "^2.81.0",
+    "rotating-file-stream": "^2.1.1",
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^2.0.2",
+    "w3c-xmlhttprequest": "^2.1.2",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.4.2"
   }
 }
