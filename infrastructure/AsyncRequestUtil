@@ -1,0 +1,26 @@
+let initReq = function (req) {
+    req.query.companyIds = req.query.companyIds && JSON.parse(req.query.companyIds) || [23];
+    req.query.limit = req.query.limit || 500;
+};
+
+
+let handleRes = function (req, res, rst) {
+    res.status(rst.status || 200);
+    res.json(Object.assign({"reference_id": req.id}, rst))
+};
+
+module.exports = {
+    reqHandler : function (processFunc) {
+        return async function (req, res, next) {
+            try {
+                initReq(req);
+                // let rst = {'data':"ffffff"};
+                let rst = await processFunc(req);
+                handleRes(req, res, rst);
+            } catch (err) {
+                next(err);
+            }
+        }
+    }
+
+};

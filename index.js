@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 let fs = require('fs');
 let https = require("https");
+const bodyParser = require("body-parser");
 
 let userService = require("./application/UserService");
 
@@ -9,7 +10,10 @@ let uuid = require('node-uuid');
 let _ = require("lodash");
 let moment = require('moment');
 let HtjyLog = require("./infrastructure/HtjyLog")
-let CheckSecure = require("./controller/middle/CheckSecure")
+let CheckSecure = require("./middleware/CheckSecure")
+
+let Controllers = require('./controller/index');
+
 
 let env = process.env.NODE_ENV !== 'production' ? 'dev':'prod';
 let cfg = require("../will-config/will-backend/"+env+"/config.json");
@@ -22,6 +26,7 @@ const port = cfg.port;
 
 
 let HtjyMysql = require("./infrastructure/HtjyMysql");
+let HtjyRedis = require("./infrastructure/HtjyRedis");
 function initSeckillMysql() {
     let log = HtjyLog.getLogger("seckill_mysql");
     let mysql = new HtjyMysql({
@@ -33,11 +38,21 @@ function initSeckillMysql() {
     }, log);
     return mysql;
 }
-
+function initSeckillRedis(){
+    let log = HtjyLog.getLogger("seckill_redis");
+    let redis = new HtjyRedis({
+        host: cfg.redis_seckill_host,
+        port: cfg.redis_seckill_port,
+        username: cfg.redis_seckill_username,
+        password: cfg.redis_seckill_psw,
+    }, log);
+    return redis;
+}
 
 function beforeStartServer() {
     global.config = cfg;
     global.mysql = initSeckillMysql();
+    global.redis = initSeckillRedis();
     let log = HtjyLog.getLogger("api");
     global.logger = log;
     global._ = _;
@@ -45,6 +60,7 @@ function beforeStartServer() {
 }
 
 function startServer() {
+    app.use(bodyParser.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(cors({
         origin :cfg.allow_cros_origin_array
@@ -53,6 +69,8 @@ function startServer() {
     HtjyLog.initAccessLog(app);
     app.use(assignId);
     app.use(CheckSecure());
+    app.use('/htjy/api', Controllers());
+
 
     app.post("/login", reqHandler(async function (req, res, next){
 
@@ -66,8 +84,11 @@ function startServer() {
 
         let account = req.body.account;
         let password = req.body.password;
-        return  await userService.signup({account: account, password:password});
+        let first_name = req.body.first_name;
+        let last_name = req.body.last_name;
+        return  await userService.signup({account: account, password:password,first_name:first_name,last_name:last_name});
     }));
+
 
 
 // auth
@@ -119,7 +140,7 @@ function handleError() {
 }
 
 function afterStartServer() {
-    logger.info("server started");
+    logger.info("server started:"+cfg.port);
     process.on('unhandledRejection', error => {
         logger.error(error);
     });
